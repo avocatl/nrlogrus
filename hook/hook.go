@@ -43,12 +43,16 @@ func Hook(key string, account int) logrus.Hook {
 	cfg.LogLevel = "info"
 	client := logs.New(cfg)
 
-	client.BatchMode(
+	err := client.BatchMode(
 		context.Background(),
 		account,
 		logs.BatchConfigQueueSize(BatchSize),
 		logs.BatchConfigTimeout(BatchTimeout),
 	)
+
+	if err != nil {
+		panic(err)
+	}
 
 	return &h{
 		Client: &client,
